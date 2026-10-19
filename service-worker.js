@@ -35,7 +35,7 @@ async function gather_tabs(a_window_id, tries, post_func) {
         let protocols = /^(https?)|(chrome)|(file):/   // only tabs that use these protocols (not extension windows)
         for (let w of await chrome.windows.getAll()) {
             log(`looking at window ${w.id}`);
-            if (w.id !== main_window_id) {
+            if (w.id !== main_window_id && w.type === "normal") {
                 let w_tabs = (await chrome.tabs.query({windowId: w.id})).filter(
                     t => t.id !== undefined && protocols.test(t.pendingUrl || t.url)).map(t => t.id);
                 log(`moving tabs ${w_tabs} to window ${main_window_id}`);
